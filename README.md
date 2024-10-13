@@ -70,4 +70,25 @@ In the installation phase, this is where the network's Splunk server will be set
 
 ![Splunk recieving indexer](https://github.com/user-attachments/assets/7ba2c9d5-f21c-4f28-91d0-50517307edf2)
 
-Sysmon 
+Sysmon can be downloaded as a part of Microsoft's "Sysinternals" suite. This will act as an extension of the Windows Event Viewer logs that will be sent to the Splunk indexer. 
+
+In this project i researched and found a suitable and customisable Sysmon configuration authored by Olaf Hartong on Github.
+"This is a Microsoft Sysinternals Sysmon configuration repository, set up modular for easier maintenance and generation of specific configs."
+(https://github.com/olafhartong/sysmon-modular/blob/master/sysmonconfig.xml)
+
+On each network endpoint, run Sysmon.exe with with powershell using the downloaded configuration file.
+
+![Sysmon powershell](https://github.com/user-attachments/assets/8026a704-d832-4159-bf8d-ba895351cd5b)
+
+Create a configuration to determine what data will be sent to the splunk server via the Universal Forwarder. Configuration will be created in C:\Program Files\SplunkUniversalForwarder\etc\system\local directory. 
+
+![Sysmon config file](https://github.com/user-attachments/assets/1c57454c-8a5c-4ef1-b2c1-6eebb78039c5)
+
+Note: index = endpoint, will log any events that fall under the configured categories under the index "endpoint" on the splunk server. The splunk server must have an index named "endpoint" in order to receive these events. 
+
+Note: Any updates made to this config file, will require a restart of the universal forwarder service to have an effect. To do so, the splunkforwarder service can be found in services app on the endpoints: 
+![Splunk forwarder service](https://github.com/user-attachments/assets/593a61f2-922b-4f49-bb24-a504736865a7)
+
+
+
+Step 4:
