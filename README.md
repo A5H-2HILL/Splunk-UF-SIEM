@@ -27,8 +27,7 @@ This lab is designed to simulate real-world attack scenarios and to understand h
 
 
 ## Steps
-Step 1:
-Create Network using Virtual Machines in VirtualBox.
+### Step 1: Create Network using Virtual Machines in VirtualBox.
 
 The Network depicted in this project simulates that of a small company domain, running an Active Directory (AD) on a Domain Controller (DC) server (Windows Server 2022), another server (Ubuntu) running the Splunk Enterprise instance, and a Windows 10 host machine. The network also consists of a switch and a router connecting to the internet.
 
@@ -40,8 +39,7 @@ The DC server and Windows 10 machine will have Splunk Universal Forwarder instal
 
 
 
-Step 2:
-Splunk server configuration.
+### Step 2: Splunk server configuration.
 
 By downloading Splunk Enterprise for Ubuntu and installing it on the Ubuntu server, this server will act as the Splunk recieving indexer within the domain's SIEM, collecting log data from the network's universal forwarders and generating telemetry of network activity for later analysis.
 
@@ -59,8 +57,7 @@ This command ensures that any time the splunk server starts up or reboots, the s
 
 
 
-Step 3:
-Splunk Universal Forwarder installation and Sysmon configuration.
+### Step 3: Splunk Universal Forwarder installation and Sysmon configuration.
 
 Downloaded Splunk Universal Forwarder on each of the network endpoints, DC server and Win10-PC, and installed it as an "on-premises Splunk Enterprise Instance".
 
@@ -87,8 +84,88 @@ Create a configuration to determine what data will be sent to the splunk server 
 Note: index = endpoint, will log any events that fall under the configured categories under the index "endpoint" on the splunk server. The splunk server must have an index named "endpoint" in order to receive these events. 
 
 Note: Any updates made to this config file, will require a restart of the universal forwarder service to have an effect. To do so, the splunkforwarder service can be found in services app on the endpoints: 
+
 ![Splunk forwarder service](https://github.com/user-attachments/assets/593a61f2-922b-4f49-bb24-a504736865a7)
 
 
 
-Step 4:
+### Step 4: Splunk Indexer setup
+
+Create the "endpoint" index on Splunk.
+
+![Splunk endpoint index](https://github.com/user-attachments/assets/dfb2f2e1-f111-49e4-a8be-29f8bf690ef8)
+
+Now that the endpoint index is created, enable the Splunk server to receive the endpoint data. 
+
+Within the "Forwarding and receiving" tab on Splunk, under "receive data" section, select "Configure receiving", then select "New receiving port". Port left as deafault of 9997.
+
+![Index reciever port](https://github.com/user-attachments/assets/83d8da67-1d79-40f2-8c6a-dcf66194bc8e)
+
+After the receiving port has been set, data should now start being sent from the index to the splunk server, generating some telemetry in our Splunk search data. 
+
+![Endpoint data on Splunk](https://github.com/user-attachments/assets/255362bf-be00-46d4-aa09-6dfd89431ed5)
+
+NOTE: All Splunk and Sysmon configuration steps are repeated on both WIN10-PC and ADDC01 endpoints.
+
+Splunk data after both endpoints are successfully configured:
+
+![Both Endpoints configured](https://github.com/user-attachments/assets/8c35ebdc-b39d-4a85-9279-d7c392edb48c)
+
+
+
+### Step 5: Active Directory configuration.
+
+The following steps were conducted on the Active Directory domain controller (ADDC01):
+
+Static IP address set and connectivity established.
+
+![ADDC01 static IP connectivity](https://github.com/user-attachments/assets/68e51dd9-653c-49a1-9042-5f136b396089)
+
+In Server Manager dashboard, select "Add roles and features".
+
+![Add roles and features](https://github.com/user-attachments/assets/857bbbd2-bb96-4f17-9bfd-3521384f1634)
+
+![Add roles and features 2](https://github.com/user-attachments/assets/e478ed5b-24c4-4bbd-9c87-1cdddb86ecd7)
+
+![Add roles and features 3](https://github.com/user-attachments/assets/56993384-764f-452b-84b7-a9d4efa96314)
+
+Select Active Directory Domain Services in the server roles tab. 
+
+![AD domain services](https://github.com/user-attachments/assets/0ff5060b-00e5-4bb7-8537-a66b406db377)
+
+Skip through other setup tabs and install server role. 
+
+On server manager dashboard, select flag icon, and select "promote this server to a domain controller". 
+
+![Promote this server to DC](https://github.com/user-attachments/assets/2ccd616a-771a-4288-93a9-e254e9eb340a)
+
+Fill out deployment config. 
+
+![Deployment config](https://github.com/user-attachments/assets/f29c39f3-f572-4ea8-81d3-207faa21a097)
+
+Leave all other options deafult and add a password.
+
+![DC options](https://github.com/user-attachments/assets/222b74a2-4ad7-442f-b847-0e1d3d5a0d43)
+
+Skip to installation page and complete install. 
+
+![Complete AD install](https://github.com/user-attachments/assets/3e244a2c-58dd-4bdf-ba3f-0b09142846d3)
+
+On server dashboard, select tools, AD users and Computers. 
+
+![AD users and computers](https://github.com/user-attachments/assets/48e2bc88-5410-4593-b6e0-438ab55eb4eb)
+
+Create a new Organisational Unit (OU) in the domain.
+
+![New OU](https://github.com/user-attachments/assets/42acacbc-505d-4695-b55a-dadce5fb6407)
+
+Create a new user within the OU.
+
+![New user within OU](https://github.com/user-attachments/assets/71c9a2b6-6c6f-4152-9a05-5c5fe8c20757)
+
+![New user within OU 2](https://github.com/user-attachments/assets/c7ff473a-3f3a-4f13-a440-ec89b4168dc9)
+
+Create as many additional users or OUs as needed.
+
+![Bob smith OU](https://github.com/user-attachments/assets/fb4cfa40-21e2-43b5-ba31-ab60fdca493a)
+
