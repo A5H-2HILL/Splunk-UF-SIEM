@@ -27,8 +27,8 @@ This lab is designed to simulate real-world attack scenarios and to understand h
 
 
 ## Steps
-### Step 1: Create Network using Virtual Machines in VirtualBox.
-
+### Step 1: Create Network using Virtual Machines in VirtualBox
+##
 The Network depicted in this project simulates that of a small company domain, running an Active Directory (AD) on a Domain Controller (DC) server (Windows Server 2022), another server (Ubuntu) running the Splunk Enterprise instance, and a Windows 10 host machine. The network also consists of a switch and a router connecting to the internet.
 
 A Kali Linux machine is being used to attack the network, simulating outside threats and attackers.
@@ -38,9 +38,9 @@ The DC server and Windows 10 machine will have Splunk Universal Forwarder instal
 ![Network Topology](https://github.com/user-attachments/assets/701da123-ab56-43aa-afea-2254cd00d8f7)
 
 
-
-### Step 2: Splunk server configuration.
-
+##
+### Step 2: Splunk server configuration
+##
 By downloading Splunk Enterprise for Ubuntu and installing it on the Ubuntu server, this server will act as the Splunk recieving indexer within the domain's SIEM, collecting log data from the network's universal forwarders and generating telemetry of network activity for later analysis.
 
 Splunk server static IP config: 
@@ -56,9 +56,9 @@ This command ensures that any time the splunk server starts up or reboots, the s
 ![Splunk auto start command](https://github.com/user-attachments/assets/ed3f49c1-48c9-449d-913c-0b8cf2403c44)
 
 
-
-### Step 3: Splunk Universal Forwarder installation and Sysmon configuration.
-
+##
+### Step 3: Splunk Universal Forwarder installation and Sysmon configuration
+##
 Downloaded Splunk Universal Forwarder on each of the network endpoints, DC server and Win10-PC, and installed it as an "on-premises Splunk Enterprise Instance".
 
 ![Splunk install](https://github.com/user-attachments/assets/ef963081-09c3-4776-b8e7-5d6cfcb1d1d5)
@@ -88,9 +88,9 @@ Note: Any updates made to this config file, will require a restart of the univer
 ![Splunk forwarder service](https://github.com/user-attachments/assets/593a61f2-922b-4f49-bb24-a504736865a7)
 
 
-
+##
 ### Step 4: Splunk Indexer setup
-
+##
 Create the "endpoint" index on Splunk.
 
 ![Splunk endpoint index](https://github.com/user-attachments/assets/dfb2f2e1-f111-49e4-a8be-29f8bf690ef8)
@@ -112,9 +112,9 @@ Splunk data after both endpoints are successfully configured:
 ![Both Endpoints configured](https://github.com/user-attachments/assets/8c35ebdc-b39d-4a85-9279-d7c392edb48c)
 
 
-
-### Step 5: Active Directory configuration.
-
+##
+### Step 5: Active Directory configuration
+##
 The following steps were conducted on the Active Directory domain controller (ADDC01):
 
 Static IP address set and connectivity established.
@@ -143,7 +143,7 @@ Fill out deployment config.
 
 ![Deployment config](https://github.com/user-attachments/assets/f29c39f3-f572-4ea8-81d3-207faa21a097)
 
-Leave all other options deafult and add a password.
+Leave all other options default and add a password.
 
 ![DC options](https://github.com/user-attachments/assets/222b74a2-4ad7-442f-b847-0e1d3d5a0d43)
 
@@ -169,3 +169,47 @@ Create as many additional users or OUs as needed.
 
 ![Bob smith OU](https://github.com/user-attachments/assets/fb4cfa40-21e2-43b5-ba31-ab60fdca493a)
 
+For this project, it was essential to have at least one organisational unit and one user to serve as the target for the simulated attack later on.
+With this user operating on a domain registered endpoint, if any suspicious activity emerges from this (or any) account on the domain, it will be logged and flagged as suspicious behaviour within our Splunk enterprise instance.
+
+In this project i created two OU's, IT Department & HR Department, each with one user, Ash Toohill (username=atoohill) & Bob Smith (username=bsmith) respectively.
+
+
+##
+### Step 6: Joining Win10-PC enpoint to Domain
+##
+First, the Win10-PC DNS settings need to be confiured to point to the DC server.
+
+![Win10-PC DNS config](https://github.com/user-attachments/assets/45fef664-f0b1-4cc9-a744-7883f6deb723)
+
+Then verify that DNS server settings have changed.
+
+![Win10-PC DNS change](https://github.com/user-attachments/assets/d41d5680-8256-49cc-afeb-c41cd0fc4c49)
+
+The Win10-PC can now be added as a domain registered endpoint.
+In advanced system properties, add a PC name and make it a member of the domain.
+
+![Win10-PC domain registration](https://github.com/user-attachments/assets/e3386a18-2210-4d86-a54a-59a210d1bc9e)
+![Win10-PC added to domain](https://github.com/user-attachments/assets/550574f0-689e-4a19-8936-bc14410d13cc)
+
+Domain user credentials can now be used to log into the domain registered Win10-PC.
+
+
+##
+### Step 7: Enable RDP on Win10-PC
+##
+Remote Desktop Protocol (RDP) is a commonly used protocol designed to remotely provide access to network endpoints for authorized users only. In this case the authorized users would be the domain registered user accounts.
+Whilst simply enabling RDP is not in itself creating a vulnerability within the domain, it does create a potential access point for malicious actors, and the common attack vector of using weak user credentials is what will be used in this project demonstration to exploit this protocol.
+
+On the Win10-PC, enable remote connections in system properties.
+
+![Enable RDP](https://github.com/user-attachments/assets/d17527f4-0ae3-4ef5-8a61-0caaba18c87b)
+
+Domain users can then be added and authorized to use this protocol on this domain endpoint.
+
+![RDP Users](https://github.com/user-attachments/assets/90c1a0c1-70b3-4d08-93d2-bc072bbd66aa)
+
+
+##
+### Step 8: Kali Linux setup and configuration
+##
