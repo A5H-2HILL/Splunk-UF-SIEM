@@ -35,7 +35,7 @@ A Kali Linux machine is being used to attack the network, simulating outside thr
 
 The DC server and Windows 10 machine will have Splunk Universal Forwarder installed and Sysmon configured to send event log data to the server running splunk, which will generate telemetry on the Splunk Enterprise instance with the received event logs.
 
-![Network Topology](https://github.com/user-attachments/assets/701da123-ab56-43aa-afea-2254cd00d8f7)
+  ![Network Topology](https://github.com/user-attachments/assets/701da123-ab56-43aa-afea-2254cd00d8f7)
 
 
 ##
@@ -48,12 +48,12 @@ Splunk server static IP config:
 - Nameserver = 8.8.8.8 (Google) 
 - Route set to network gateway
 
-![Splunk server ip config](https://github.com/user-attachments/assets/969c36e4-9e0d-447b-972f-5be14423d822)
+  ![Splunk server ip config](https://github.com/user-attachments/assets/969c36e4-9e0d-447b-972f-5be14423d822)
 
 
 This command ensures that any time the splunk server starts up or reboots, the splunk module installed on the server will run as the user "splunk". Meaning that all that is needed to access splunk on the network connected device (Win10-PC) is to ensure that the splunk server is running. 
 
-![Splunk auto start command](https://github.com/user-attachments/assets/ed3f49c1-48c9-449d-913c-0b8cf2403c44)
+  ![Splunk auto start command](https://github.com/user-attachments/assets/ed3f49c1-48c9-449d-913c-0b8cf2403c44)
 
 
 ##
@@ -61,11 +61,11 @@ This command ensures that any time the splunk server starts up or reboots, the s
 ##
 Downloaded Splunk Universal Forwarder on each of the network endpoints, DC server and Win10-PC, and installed it as an "on-premises Splunk Enterprise Instance".
 
-![Splunk install](https://github.com/user-attachments/assets/ef963081-09c3-4776-b8e7-5d6cfcb1d1d5)
+  ![Splunk install](https://github.com/user-attachments/assets/ef963081-09c3-4776-b8e7-5d6cfcb1d1d5)
 
 In the installation phase, this is where the network's Splunk server will be set as the receiving indexer for each endpoint running Universal Forwarder.
 
-![Splunk recieving indexer](https://github.com/user-attachments/assets/7ba2c9d5-f21c-4f28-91d0-50517307edf2)
+  ![Splunk recieving indexer](https://github.com/user-attachments/assets/7ba2c9d5-f21c-4f28-91d0-50517307edf2)
 
 Sysmon can be downloaded as a part of Microsoft's "Sysinternals" suite. This will act as an extension of the Windows Event Viewer logs that will be sent to the Splunk indexer. 
 
@@ -75,17 +75,17 @@ In this project i researched and found a suitable and customisable Sysmon config
 
 On each network endpoint, run Sysmon.exe with with powershell using the downloaded configuration file.
 
-![Sysmon powershell](https://github.com/user-attachments/assets/8026a704-d832-4159-bf8d-ba895351cd5b)
+  ![Sysmon powershell](https://github.com/user-attachments/assets/8026a704-d832-4159-bf8d-ba895351cd5b)
 
 Create a configuration to determine what data will be sent to the splunk server via the Universal Forwarder. Configuration will be created in C:\Program Files\SplunkUniversalForwarder\etc\system\local directory. 
 
-![Sysmon config file](https://github.com/user-attachments/assets/1c57454c-8a5c-4ef1-b2c1-6eebb78039c5)
+  ![Sysmon config file](https://github.com/user-attachments/assets/1c57454c-8a5c-4ef1-b2c1-6eebb78039c5)
 
-Note: index = endpoint, will log any events that fall under the configured categories under the index "endpoint" on the splunk server. The splunk server must have an index named "endpoint" in order to receive these events. 
+    NOTE: index = endpoint, will log any events that fall under the configured categories under the index "endpoint" on the splunk server. The splunk server must have an index named "endpoint" in order to receive these events. 
 
-Note: Any updates made to this config file, will require a restart of the universal forwarder service to have an effect. To do so, the splunkforwarder service can be found in services app on the endpoints: 
+    NOTE: Any updates made to this config file, will require a restart of the universal forwarder service to have an effect. To do so, the splunkforwarder service can be found in services app on the endpoints: 
 
-![Splunk forwarder service](https://github.com/user-attachments/assets/593a61f2-922b-4f49-bb24-a504736865a7)
+  ![Splunk forwarder service](https://github.com/user-attachments/assets/593a61f2-922b-4f49-bb24-a504736865a7)
 
 
 ##
@@ -93,23 +93,23 @@ Note: Any updates made to this config file, will require a restart of the univer
 ##
 Create the "endpoint" index on Splunk.
 
-![Splunk endpoint index](https://github.com/user-attachments/assets/dfb2f2e1-f111-49e4-a8be-29f8bf690ef8)
+  ![Splunk endpoint index](https://github.com/user-attachments/assets/dfb2f2e1-f111-49e4-a8be-29f8bf690ef8)
 
 Now that the endpoint index is created, enable the Splunk server to receive the endpoint data. 
 
 Within the "Forwarding and receiving" tab on Splunk, under "receive data" section, select "Configure receiving", then select "New receiving port". Port left as deafault of 9997.
 
-![Index reciever port](https://github.com/user-attachments/assets/83d8da67-1d79-40f2-8c6a-dcf66194bc8e)
+  ![Index reciever port](https://github.com/user-attachments/assets/83d8da67-1d79-40f2-8c6a-dcf66194bc8e)
 
 After the receiving port has been set, data should now start being sent from the index to the splunk server, generating some telemetry in our Splunk search data. 
 
-![Endpoint data on Splunk](https://github.com/user-attachments/assets/255362bf-be00-46d4-aa09-6dfd89431ed5)
+  ![Endpoint data on Splunk](https://github.com/user-attachments/assets/255362bf-be00-46d4-aa09-6dfd89431ed5)
 
-NOTE: All Splunk and Sysmon configuration steps are repeated on both WIN10-PC and ADDC01 endpoints.
+    NOTE: All Splunk and Sysmon configuration steps are repeated on both WIN10-PC and ADDC01 endpoints.
 
 Splunk data after both endpoints are successfully configured:
 
-![Both Endpoints configured](https://github.com/user-attachments/assets/8c35ebdc-b39d-4a85-9279-d7c392edb48c)
+  ![Both Endpoints configured](https://github.com/user-attachments/assets/8c35ebdc-b39d-4a85-9279-d7c392edb48c)
 
 
 ##
@@ -119,55 +119,55 @@ The following steps were conducted on the Active Directory domain controller (AD
 
 Static IP address set and connectivity established.
 
-![ADDC01 static IP connectivity](https://github.com/user-attachments/assets/68e51dd9-653c-49a1-9042-5f136b396089)
+  ![ADDC01 static IP connectivity](https://github.com/user-attachments/assets/68e51dd9-653c-49a1-9042-5f136b396089)
 
 In Server Manager dashboard, select "Add roles and features".
 
-![Add roles and features](https://github.com/user-attachments/assets/857bbbd2-bb96-4f17-9bfd-3521384f1634)
+  ![Add roles and features](https://github.com/user-attachments/assets/857bbbd2-bb96-4f17-9bfd-3521384f1634)
 
-![Add roles and features 2](https://github.com/user-attachments/assets/e478ed5b-24c4-4bbd-9c87-1cdddb86ecd7)
+  ![Add roles and features 2](https://github.com/user-attachments/assets/e478ed5b-24c4-4bbd-9c87-1cdddb86ecd7)
 
-![Add roles and features 3](https://github.com/user-attachments/assets/56993384-764f-452b-84b7-a9d4efa96314)
+  ![Add roles and features 3](https://github.com/user-attachments/assets/56993384-764f-452b-84b7-a9d4efa96314)
 
 Select Active Directory Domain Services in the server roles tab. 
 
-![AD domain services](https://github.com/user-attachments/assets/0ff5060b-00e5-4bb7-8537-a66b406db377)
+  ![AD domain services](https://github.com/user-attachments/assets/0ff5060b-00e5-4bb7-8537-a66b406db377)
 
 Skip through other setup tabs and install server role. 
 
 On server manager dashboard, select flag icon, and select "promote this server to a domain controller". 
 
-![Promote this server to DC](https://github.com/user-attachments/assets/2ccd616a-771a-4288-93a9-e254e9eb340a)
+  ![Promote this server to DC](https://github.com/user-attachments/assets/2ccd616a-771a-4288-93a9-e254e9eb340a)
 
 Fill out deployment config. 
 
-![Deployment config](https://github.com/user-attachments/assets/f29c39f3-f572-4ea8-81d3-207faa21a097)
+  ![Deployment config](https://github.com/user-attachments/assets/f29c39f3-f572-4ea8-81d3-207faa21a097)
 
 Leave all other options default and add a password.
-
-![DC options](https://github.com/user-attachments/assets/222b74a2-4ad7-442f-b847-0e1d3d5a0d43)
+  
+  ![DC options](https://github.com/user-attachments/assets/222b74a2-4ad7-442f-b847-0e1d3d5a0d43)
 
 Skip to installation page and complete install. 
 
-![Complete AD install](https://github.com/user-attachments/assets/3e244a2c-58dd-4bdf-ba3f-0b09142846d3)
+  ![Complete AD install](https://github.com/user-attachments/assets/3e244a2c-58dd-4bdf-ba3f-0b09142846d3)
 
 On server dashboard, select tools, AD users and Computers. 
 
-![AD users and computers](https://github.com/user-attachments/assets/48e2bc88-5410-4593-b6e0-438ab55eb4eb)
+  ![AD users and computers](https://github.com/user-attachments/assets/48e2bc88-5410-4593-b6e0-438ab55eb4eb)
 
 Create a new Organisational Unit (OU) in the domain.
 
-![New OU](https://github.com/user-attachments/assets/42acacbc-505d-4695-b55a-dadce5fb6407)
+  ![New OU](https://github.com/user-attachments/assets/42acacbc-505d-4695-b55a-dadce5fb6407)
 
 Create a new user within the OU.
 
-![New user within OU](https://github.com/user-attachments/assets/71c9a2b6-6c6f-4152-9a05-5c5fe8c20757)
+  ![New user within OU](https://github.com/user-attachments/assets/71c9a2b6-6c6f-4152-9a05-5c5fe8c20757)
 
-![New user within OU 2](https://github.com/user-attachments/assets/c7ff473a-3f3a-4f13-a440-ec89b4168dc9)
+  ![New user within OU 2](https://github.com/user-attachments/assets/c7ff473a-3f3a-4f13-a440-ec89b4168dc9)
 
 Create as many additional users or OUs as needed.
 
-![Bob smith OU](https://github.com/user-attachments/assets/fb4cfa40-21e2-43b5-ba31-ab60fdca493a)
+  ![Bob smith OU](https://github.com/user-attachments/assets/fb4cfa40-21e2-43b5-ba31-ab60fdca493a)
 
 For this project, it was essential to have at least one organisational unit and one user to serve as the target for the simulated attack later on.
 With this user operating on a domain registered endpoint, if any suspicious activity emerges from this (or any) account on the domain, it will be logged and flagged as suspicious behaviour within our Splunk enterprise instance.
@@ -180,17 +180,17 @@ In this project i created two OU's, IT Department & HR Department, each with one
 ##
 First, the Win10-PC DNS settings need to be confiured to point to the DC server.
 
-![Win10-PC DNS config](https://github.com/user-attachments/assets/45fef664-f0b1-4cc9-a744-7883f6deb723)
+  ![Win10-PC DNS config](https://github.com/user-attachments/assets/45fef664-f0b1-4cc9-a744-7883f6deb723)
 
 Then verify that DNS server settings have changed.
 
-![Win10-PC DNS change](https://github.com/user-attachments/assets/d41d5680-8256-49cc-afeb-c41cd0fc4c49)
+  ![Win10-PC DNS change](https://github.com/user-attachments/assets/d41d5680-8256-49cc-afeb-c41cd0fc4c49)
 
 The Win10-PC can now be added as a domain registered endpoint.
 In advanced system properties, add a PC name and make it a member of the domain.
 
-![Win10-PC domain registration](https://github.com/user-attachments/assets/e3386a18-2210-4d86-a54a-59a210d1bc9e)
-![Win10-PC added to domain](https://github.com/user-attachments/assets/550574f0-689e-4a19-8936-bc14410d13cc)
+  ![Win10-PC domain registration](https://github.com/user-attachments/assets/e3386a18-2210-4d86-a54a-59a210d1bc9e)
+  ![Win10-PC added to domain](https://github.com/user-attachments/assets/550574f0-689e-4a19-8936-bc14410d13cc)
 
 Domain user credentials can now be used to log into the domain registered Win10-PC.
 
@@ -203,13 +203,95 @@ Whilst simply enabling RDP is not in itself creating a vulnerability within the 
 
 On the Win10-PC, enable remote connections in system properties.
 
-![Enable RDP](https://github.com/user-attachments/assets/d17527f4-0ae3-4ef5-8a61-0caaba18c87b)
+  ![Enable RDP](https://github.com/user-attachments/assets/d17527f4-0ae3-4ef5-8a61-0caaba18c87b)
 
 Domain users can then be added and authorized to use this protocol on this domain endpoint.
 
-![RDP Users](https://github.com/user-attachments/assets/90c1a0c1-70b3-4d08-93d2-bc072bbd66aa)
+  ![RDP Users](https://github.com/user-attachments/assets/90c1a0c1-70b3-4d08-93d2-bc072bbd66aa)
 
 
 ##
-### Step 8: Kali Linux setup and configuration
+### Step 8: Kali Linux configuration and attack simulation setup
 ##
+For this part of the project, this Kali machine is to be used as the attacker in the simulated scenario in order to test the domain's SIEM functionality.
+I used my exisiting Kali homelab VM for this project component, however i created a VirtualBox snapshot of my original Kali configuration before making changes and modifications to the system that are specific to this project example.
+
+Initial static IP configuration and connectivity verified.
+
+  ![Kali static IP](https://github.com/user-attachments/assets/d69a6bb2-9e75-4bbc-99c8-a3c9290404e0)
+  ![Kali ping test](https://github.com/user-attachments/assets/857eb6ad-07b3-421f-8a2a-a43415b4de39)
+
+For the attack simulation against the domain, we are going to be conducting a brute-force attack against one of the domain user accounts to crack credentials and gain access to the domain.
+This attack attempt, whether successful or unsuccessful in logging into the targeted account, will generate telemetry within our Splunk Enterprise instance through logs collected in correlation to the attack activity and sent to the Splunk server using the endpoint's Universal Forwarder.
+
+For this project, the focus is on the domain's SIEM and the functionality of the Universal Forwarders using Sysmon logs. Therefore the setup and execution of this attack simulation is rather simple and curated for smooth demonstration purposes.
+
+    NOTE: When setting up user account "bsmith" on the domain, the password "supersafepassw0rd!" was set for this account's credentials.
+
+The brute force tool Crowbar was installed and is what will be used for the attack.
+
+  ![crowbar install](https://github.com/user-attachments/assets/629b8bd4-cac5-4ed0-8f84-17a0d8858797)
+
+This tool operates on a wordlist to guess/crack credentials.
+Within Kali, the "rockyou.txt" wordlist is available by default.
+
+  ![rockyou wordlist](https://github.com/user-attachments/assets/6899554b-5710-4e91-8686-bc42daaf7edc)
+
+  ![rockyou wordlist copy](https://github.com/user-attachments/assets/d8e05d83-233f-42b7-824b-6ce62084b56b)
+
+Copy first 20 lines of the wordlist to a new .txt file.
+
+  ![head -n 20 rockyou](https://github.com/user-attachments/assets/3c0676eb-744d-4c8c-97aa-a8591c2db67b)
+
+Edit passwords.txt file to include passwords used during AD setup. 
+
+  ![password list edit](https://github.com/user-attachments/assets/4197994c-17d7-40b1-aeb3-9dae12bb2336)
+
+
+##
+### Step 9: Attack simulation
+##
+Enter crowbar command with previously created password list. 
+
+    NOTE: -b flag signifies protocol used, -u flag represents user account, -C flag selects wordlist file, -s flag selects source ip of target. 
+
+Use /32 CIDR notation to narrow down search for single ip. 
+
+We know RDP protocol is enabled on the targeted domain endpoint, so we will target the user bsmith by cracking their RDP login credentials to gain access to the domain.
+
+![Crowbar](https://github.com/user-attachments/assets/560490d8-14de-4161-ba73-aeefa397c811)
+
+
+##
+### Step 10: Using Splunk to detect and analyze brute force attack
+##
+
+In Splunk's search and reporting app, enter the endpoint index and user invloved In the attack. Enter 15 minutes as the event window as the attack recently occurred to narrow down the results. 
+
+![Splunk search](https://github.com/user-attachments/assets/6c46e7c2-09a0-47bd-86c6-400dc7eb3e3a)
+
+Look at the EventCode Field to see a suspicious amount of activity regarding the "4625" event code, which signifies "An account failed to logon". 
+
+![Event code 4625](https://github.com/user-attachments/assets/b486ac91-2d06-4365-808a-0458285cb99c)
+
+    NOTE: the count of the event code is 22, which matches the amount of passwords in our wordlist file used on kali minus the one successful password. Also notice that all these events take place in quick succession, which is a clear indication of a brute force attacks. 
+
+There is also one event log for EventCode 4624, which signifies "An account was successfully logged on". 
+This indicated the one correct password in the wordlist that granted access to the account.
+
+![Event codes](https://github.com/user-attachments/assets/b5bb9ea0-d224-4ed1-8d70-b39e395b53d7)
+
+By selecting this log and expanding all lines, it can be found that the workstation name and source ip indicate malicious activity. 
+
+![malicious log](https://github.com/user-attachments/assets/ba1c2638-d74d-4b27-8531-54170cc5db9f)
+
+For further intrusion detection methods, a Splunk alert can be created for EventCode 4625 "failed logon attempts".
+
+![4625 Alert](https://github.com/user-attachments/assets/004e08b3-290f-436f-9f6b-27984cb3e53b)
+
+![4625 Alert pt2](https://github.com/user-attachments/assets/0c331f78-c951-4fbf-916b-52c61405f9f2)
+
+In future, when the domain encounters potential brute force attacks, these kinds of alerts can be set up to enable security teams to respond rapidly and enforce effective incident response strategies.
+In Splunk, the "triggered alerts" tab displays the alerts and correlating log events.
+
+![Triggered alerts](https://github.com/user-attachments/assets/0d59f01c-bf6e-4cca-a800-d216fd6809ba)
