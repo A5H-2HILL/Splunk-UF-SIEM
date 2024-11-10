@@ -1,4 +1,4 @@
-# Splunk-UF-SIEM [WORK IN PROGRESS]
+# Splunk-UF-SIEM 
 Splunk Universal Forwarder using Sysmon event logs in an Active Directory environment.
 
 ## Objective
@@ -81,9 +81,9 @@ Create a configuration to determine what data will be sent to the Splunk server 
 
   ![Sysmon config file](https://github.com/user-attachments/assets/1c57454c-8a5c-4ef1-b2c1-6eebb78039c5)
 
-    NOTE: index = endpoint, will log any events that fall under the configured categories under the index "endpoint" on the Splunk server. The Splunk server must have an index named "endpoint" in order to receive these events. 
+  ### NOTE: index = endpoint, will log any events that fall under the configured categories under the index "endpoint" on the Splunk server. The Splunk server must have an index named "endpoint" in order to receive these events. 
 
-    NOTE: Any updates made to this config file, will require a restart of the universal forwarder service to have an effect. To do so, the Splunk forwarder service can be found in services app on the endpoints: 
+  ### NOTE: Any updates made to this config file, will require a restart of the universal forwarder service to have an effect. To do so, the Splunk forwarder service can be found in services app on the endpoints: 
 
   ![Splunk forwarder service](https://github.com/user-attachments/assets/593a61f2-922b-4f49-bb24-a504736865a7)
 
@@ -105,7 +105,7 @@ After the receiving port has been set, data should now start being sent from the
 
   ![Endpoint data on Splunk](https://github.com/user-attachments/assets/255362bf-be00-46d4-aa09-6dfd89431ed5)
 
-    NOTE: All Splunk and Sysmon configuration steps are repeated on both WIN10-PC and ADDC01 endpoints.
+  ### NOTE: All Splunk and Sysmon configuration steps are repeated on both WIN10-PC and ADDC01 endpoints.
 
 Splunk data after both endpoints are successfully configured:
 
@@ -226,7 +226,7 @@ This attack attempt, whether successful or unsuccessful in logging into the targ
 
 For this project, the focus is on the domain's SIEM and the functionality of the Universal Forwarders using Sysmon logs. Therefore the setup and execution of this attack simulation is rather simple and curated for smooth demonstration purposes.
 
-    NOTE: When setting up user account "bsmith" on the domain, the password "supersafepassw0rd!" was set for this account's credentials.
+  ### NOTE: When setting up user account "bsmith" on the domain, the password "supersafepassw0rd!" was set for this account's credentials.
 
 The brute force tool Crowbar was installed and is what will be used for the attack.
 
@@ -253,7 +253,7 @@ Edit passwords.txt file to include passwords used during AD setup.
 ##
 Enter crowbar command with previously created password list. 
 
-    NOTE: -b flag signifies protocol used, -u flag represents user account, -C flag selects wordlist file, -s flag selects source ip of target. 
+  ### NOTE: -b flag signifies protocol used, -u flag represents user account, -C flag selects wordlist file, -s flag selects source ip of target. 
 
 Use /32 CIDR notation to narrow down search for single ip address. 
 
@@ -274,7 +274,7 @@ Look at the EventCode Field to see a suspicious amount of activity regarding the
 
 ![Event code 4625](https://github.com/user-attachments/assets/b486ac91-2d06-4365-808a-0458285cb99c)
 
-    NOTE: the count of the event code is 22, which matches the amount of passwords in our wordlist file used on kali minus the one successful password. Also notice that all these events take place in quick succession, which is a clear indication of a brute force attacks. 
+   ### NOTE: the count of the event code is 22, which matches the amount of passwords in our wordlist file used on kali minus the one successful password. Also notice that all these events take place in quick succession, which is a clear indication of a brute force attacks. 
 
 There is also one event log for EventCode 4624, which signifies "An account was successfully logged on". 
 This indicated the one correct password in the wordlist that granted access to the account.
