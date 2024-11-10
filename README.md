@@ -4,7 +4,7 @@ Splunk Universal Forwarder using Sysmon event logs in an Active Directory enviro
 ## Objective
 
 The objective of this project is to create an Active Directory environment using virtual machines in VirtualBox, 
-implement Splunk universal forwarder on domain endpoints that send Sysmon event log data to a Splunk server on the domain, 
+implement Splunk Universal Forwarder on domain endpoints that send Sysmon event log data to a Splunk server on the domain, 
 thus generating telemetry data within the Security Information and Event Management (SIEM) system. 
 This lab is designed to simulate real-world attack scenarios and to understand how to detect and protect from different attack vectors and monitor for Indicators of Compromise (IoCs).
 
@@ -21,19 +21,19 @@ This lab is designed to simulate real-world attack scenarios and to understand h
 
 - Active Directory to create domain, domain registered endpoints, servers and users.
 - Sysmon to create event logs that contain more in-depth analysis than standard Windows Event Viewer.
-- Splunk Universal Forwarder to sent event log data to Splunk server on domain.
+- Splunk Universal Forwarder to send event log data to Splunk server on domain.
 - Crowbar used on Kali Linux machine to simulate brute force attack on domain user account.
-- Splunk Enterprise used to analyze telemetry data generated from attack simulation.0
+- Splunk Enterprise used to analyze telemetry data generated from attack simulation.
 
 
 ## Steps
 ### Step 1: Create Network using Virtual Machines in VirtualBox
 ##
-The Network depicted in this project simulates that of a small company domain, running an Active Directory (AD) on a Domain Controller (DC) server (Windows Server 2022), another server (Ubuntu) running the Splunk Enterprise instance, and a Windows 10 host machine. The network also consists of a switch and a router connecting to the internet.
+The network depicted in this project simulates that of a small company domain, running an Active Directory (AD) on a Domain Controller (DC) server (Windows Server 2022), another server (Ubuntu) running the Splunk Enterprise instance, and a Windows 10 host machine. The network also consists of a switch and a router connecting to the internet.
 
 A Kali Linux machine is being used to attack the network, simulating outside threats and attackers.
 
-The DC server and Windows 10 machine will have Splunk Universal Forwarder installed and Sysmon configured to send event log data to the server running splunk, which will generate telemetry on the Splunk Enterprise instance with the received event logs.
+The DC server and Windows 10 machine will have Splunk Universal Forwarder installed and Sysmon configured to send event log data to the server running Splunk, which will generate telemetry on the Splunk Enterprise instance with the received event logs.
 
   ![Network Topology](https://github.com/user-attachments/assets/701da123-ab56-43aa-afea-2254cd00d8f7)
 
@@ -41,7 +41,7 @@ The DC server and Windows 10 machine will have Splunk Universal Forwarder instal
 ##
 ### Step 2: Splunk server configuration
 ##
-By downloading Splunk Enterprise for Ubuntu and installing it on the Ubuntu server, this server will act as the Splunk recieving indexer within the domain's SIEM, collecting log data from the network's universal forwarders and generating telemetry of network activity for later analysis.
+By downloading Splunk Enterprise for Ubuntu and installing it on the Ubuntu server, this server will act as the Splunk receiving indexer within the domain's SIEM, collecting log data from the network's universal forwarders and generating telemetry of network activity for later analysis.
 
 Splunk server static IP config: 
 - Splunk server ip = 192.168.10.10/24 
@@ -51,7 +51,7 @@ Splunk server static IP config:
   ![Splunk server ip config](https://github.com/user-attachments/assets/969c36e4-9e0d-447b-972f-5be14423d822)
 
 
-This command ensures that any time the splunk server starts up or reboots, the splunk module installed on the server will run as the user "splunk". Meaning that all that is needed to access splunk on the network connected device (Win10-PC) is to ensure that the splunk server is running. 
+This command ensures that any time the Splunk server starts up or reboots, the Splunk module installed on the server will run as the user "splunk". Meaning that all that is needed to access Splunk on the network connected device (Win10-PC) is to ensure that the Splunk server is running. 
 
   ![Splunk auto start command](https://github.com/user-attachments/assets/ed3f49c1-48c9-449d-913c-0b8cf2403c44)
 
@@ -69,21 +69,21 @@ In the installation phase, this is where the network's Splunk server will be set
 
 Sysmon can be downloaded as a part of Microsoft's "Sysinternals" suite. This will act as an extension of the Windows Event Viewer logs that will be sent to the Splunk indexer. 
 
-In this project i researched and found a suitable and customisable Sysmon configuration authored by Olaf Hartong on Github.
+In this project i researched and found a suitable and customizable Sysmon configuration authored by Olaf Hartong on GitHub.
 "This is a Microsoft Sysinternals Sysmon configuration repository, set up modular for easier maintenance and generation of specific configs."
 (https://github.com/olafhartong/sysmon-modular/blob/master/sysmonconfig.xml)
 
-On each network endpoint, run Sysmon.exe with with powershell using the downloaded configuration file.
+On each network endpoint, run Sysmon.exe with PowerShell using the downloaded configuration file.
 
   ![Sysmon powershell](https://github.com/user-attachments/assets/8026a704-d832-4159-bf8d-ba895351cd5b)
 
-Create a configuration to determine what data will be sent to the splunk server via the Universal Forwarder. Configuration will be created in C:\Program Files\SplunkUniversalForwarder\etc\system\local directory. 
+Create a configuration to determine what data will be sent to the Splunk server via the Universal Forwarder. Configuration will be created in C:\Program Files\SplunkUniversalForwarder\etc\system\local directory. 
 
   ![Sysmon config file](https://github.com/user-attachments/assets/1c57454c-8a5c-4ef1-b2c1-6eebb78039c5)
 
-    NOTE: index = endpoint, will log any events that fall under the configured categories under the index "endpoint" on the splunk server. The splunk server must have an index named "endpoint" in order to receive these events. 
+    NOTE: index = endpoint, will log any events that fall under the configured categories under the index "endpoint" on the Splunk server. The Splunk server must have an index named "endpoint" in order to receive these events. 
 
-    NOTE: Any updates made to this config file, will require a restart of the universal forwarder service to have an effect. To do so, the splunkforwarder service can be found in services app on the endpoints: 
+    NOTE: Any updates made to this config file, will require a restart of the universal forwarder service to have an effect. To do so, the Splunk forwarder service can be found in services app on the endpoints: 
 
   ![Splunk forwarder service](https://github.com/user-attachments/assets/593a61f2-922b-4f49-bb24-a504736865a7)
 
@@ -97,11 +97,11 @@ Create the "endpoint" index on Splunk.
 
 Now that the endpoint index is created, enable the Splunk server to receive the endpoint data. 
 
-Within the "Forwarding and receiving" tab on Splunk, under "receive data" section, select "Configure receiving", then select "New receiving port". Port left as deafault of 9997.
+Within the "Forwarding and receiving" tab on Splunk, under "receive data" section, select "Configure receiving", then select "New receiving port". Port left as default of 9997.
 
   ![Index reciever port](https://github.com/user-attachments/assets/83d8da67-1d79-40f2-8c6a-dcf66194bc8e)
 
-After the receiving port has been set, data should now start being sent from the index to the splunk server, generating some telemetry in our Splunk search data. 
+After the receiving port has been set, data should now start being sent from the index to the Splunk server, generating some telemetry in our Splunk search data. 
 
   ![Endpoint data on Splunk](https://github.com/user-attachments/assets/255362bf-be00-46d4-aa09-6dfd89431ed5)
 
@@ -155,7 +155,7 @@ On server dashboard, select tools, AD users and Computers.
 
   ![AD users and computers](https://github.com/user-attachments/assets/48e2bc88-5410-4593-b6e0-438ab55eb4eb)
 
-Create a new Organisational Unit (OU) in the domain.
+Create a new Organizational Unit (OU) in the domain.
 
   ![New OU](https://github.com/user-attachments/assets/42acacbc-505d-4695-b55a-dadce5fb6407)
 
@@ -169,16 +169,16 @@ Create as many additional users or OUs as needed.
 
   ![Bob smith OU](https://github.com/user-attachments/assets/fb4cfa40-21e2-43b5-ba31-ab60fdca493a)
 
-For this project, it was essential to have at least one organisational unit and one user to serve as the target for the simulated attack later on.
-With this user operating on a domain registered endpoint, if any suspicious activity emerges from this (or any) account on the domain, it will be logged and flagged as suspicious behaviour within our Splunk enterprise instance.
+For this project, it was essential to have at least one organizational unit and one user to serve as the target for the simulated attack later on.
+With this user operating on a domain registered endpoint, if any suspicious activity emerges from this (or any) account on the domain, it will be logged and flagged as suspicious behavior within our Splunk enterprise instance.
 
-In this project i created two OU's, IT Department & HR Department, each with one user, Ash Toohill (username=atoohill) & Bob Smith (username=bsmith) respectively.
+In this project I created two OU's, IT Department & HR Department, each with one user, Ash Toohill (username=atoohill) & Bob Smith (username=bsmith) respectively.
 
 
 ##
-### Step 6: Joining Win10-PC enpoint to Domain
+### Step 6: Joining Win10-PC endpoint to Domain
 ##
-First, the Win10-PC DNS settings need to be confiured to point to the DC server.
+First, the Win10-PC DNS settings need to be configured to point to the DC server.
 
   ![Win10-PC DNS config](https://github.com/user-attachments/assets/45fef664-f0b1-4cc9-a744-7883f6deb723)
 
@@ -214,7 +214,7 @@ Domain users can then be added and authorized to use this protocol on this domai
 ### Step 8: Kali Linux configuration and attack simulation setup
 ##
 For this part of the project, this Kali machine is to be used as the attacker in the simulated scenario in order to test the domain's SIEM functionality.
-I used my exisiting Kali homelab VM for this project component, however i created a VirtualBox snapshot of my original Kali configuration before making changes and modifications to the system that are specific to this project example.
+I used my existing Kali home lab VM for this project component, however i created a VirtualBox snapshot of my original Kali configuration before making changes and modifications to the system that are specific to this project example.
 
 Initial static IP configuration and connectivity verified.
 
@@ -255,7 +255,7 @@ Enter crowbar command with previously created password list.
 
     NOTE: -b flag signifies protocol used, -u flag represents user account, -C flag selects wordlist file, -s flag selects source ip of target. 
 
-Use /32 CIDR notation to narrow down search for single ip. 
+Use /32 CIDR notation to narrow down search for single ip address. 
 
 We know RDP protocol is enabled on the targeted domain endpoint, so we will target the user bsmith by cracking their RDP login credentials to gain access to the domain.
 
@@ -266,7 +266,7 @@ We know RDP protocol is enabled on the targeted domain endpoint, so we will targ
 ### Step 10: Using Splunk to detect and analyze brute force attack
 ##
 
-In Splunk's search and reporting app, enter the endpoint index and user invloved In the attack. Enter 15 minutes as the event window as the attack recently occurred to narrow down the results. 
+In Splunk's search and reporting app, enter the endpoint index and user involved In the attack. Enter 15 minutes as the event window as the attack recently occurred to narrow down the results. 
 
 ![Splunk search](https://github.com/user-attachments/assets/6c46e7c2-09a0-47bd-86c6-400dc7eb3e3a)
 
@@ -295,3 +295,48 @@ In future, when the domain encounters potential brute force attacks, these kinds
 In Splunk, the "triggered alerts" tab displays the alerts and correlating log events.
 
 ![Triggered alerts](https://github.com/user-attachments/assets/0d59f01c-bf6e-4cca-a800-d216fd6809ba)
+
+
+##
+# Project Summary
+
+Within this project the following was achieved:
+
+   - Active Directory Domain was configured and running with organizational units and users.
+   - Splunk Universal Forwarder and Sysmon event log services were successfully installed and running on both domain endpoints.
+   - Telemetry was generated in the Splunk enterprise instance, with brute force attack logs being successfully collected on the endpoint and sent to the Splunk indexer, generating telemetry for more detailed analysis via the use of custom configured Sysmon event logs.
+
+With Universal Forwarders and Sysmon set up and successfully logging and monitoring d1omain activity, it would make for a suitable SIEM solution, giving security professionals and incident response a deeper insight into the details of suspicious domain activity.
+Sysmon event log configuration is also highly customizable and scalable to account for more specific domain activity or potential attack vectors and IoCs.
+
+
+##
+# Project References and Resources
+
+Splunk server iso download 
+
+    https://www.splunk.com/en_us/download/splunk-enterprise/thank-you-enterprise.html 
+
+ 
+Sysmon download 
+
+    https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon 
+
+ 
+Sysmon config 
+
+    https://github.com/olafhartong/sysmon-modular 
+
+    https://github.com/olafhartong/sysmon-modular/blob/master/sysmonconfig.xml 
+
+
+Read this for any info on Splunk!
+
+    https://docs.splunk.com/Documentation 
+
+
+ Crowbar install and config
+
+    https://github.com/galkan/crowbar 
+
+ 
